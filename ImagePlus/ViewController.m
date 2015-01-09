@@ -17,9 +17,47 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    self.actionButton.enabled = FALSE;
 }
 
 - (IBAction)showActions:(id)sender {
+    
+    UIAlertController *actions = [UIAlertController alertControllerWithTitle:@"Image Options" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    
+    UIAlertAction *library = [UIAlertAction actionWithTitle:@"Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //[self chooseImageFromLibrary];
+    }];
+    
+    [actions addAction:library];
+    
+    UIAlertAction *email = [UIAlertAction actionWithTitle:@"Email" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //[self takePicture];
+    }];
+    
+    [actions addAction:email];
+
+    UIAlertAction *edit = [UIAlertAction actionWithTitle:@"Edit" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self presentImageEditorWithImage:self.backgroundImage.image];
+    }];
+    
+    [actions addAction:edit];
+    
+    UIAlertAction *revert = [UIAlertAction actionWithTitle:@"Revert to Original" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //[self takePicture];
+    }];
+    
+    [actions addAction:revert];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        
+    }];
+    
+    [actions addAction:cancel];
+    
+    [self presentViewController:actions animated:YES completion:^{
+        
+    }];
 }
 
 
@@ -118,6 +156,7 @@
 - (void)imageEditor:(CLImageEditor *)editor didFinishEdittingWithImage:(UIImage *)image
 {
     self.backgroundImage.image = image;
+    self.actionButton.enabled = TRUE;
     [editor dismissViewControllerAnimated:YES completion:nil];
 }
 
