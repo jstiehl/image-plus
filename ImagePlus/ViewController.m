@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+@import MessageUI;
 
 @interface ViewController ()
 
@@ -25,14 +26,16 @@
     UIAlertController *actions = [UIAlertController alertControllerWithTitle:@"Image Options" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     
-    UIAlertAction *library = [UIAlertAction actionWithTitle:@"Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *library = [UIAlertAction actionWithTitle:@"Save to Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         //[self chooseImageFromLibrary];
+        UIImageWriteToSavedPhotosAlbum(self.backgroundImage.image, nil, nil, nil);
     }];
     
     [actions addAction:library];
     
     UIAlertAction *email = [UIAlertAction actionWithTitle:@"Email" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        //[self takePicture];
+        [self emailPhoto];
+
     }];
     
     [actions addAction:email];
@@ -44,7 +47,9 @@
     [actions addAction:edit];
     
     UIAlertAction *revert = [UIAlertAction actionWithTitle:@"Revert to Original" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        //[self takePicture];
+        
+        self.backgroundImage.image = self.originalImage;
+
     }];
     
     [actions addAction:revert];
@@ -106,7 +111,8 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
 
     UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    self.backgroundImage.image = chosenImage;
+    
+    self.originalImage = chosenImage;
     
     CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:chosenImage];
     editor.delegate = self;
@@ -116,6 +122,7 @@
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -158,6 +165,29 @@
     self.backgroundImage.image = image;
     self.actionButton.enabled = TRUE;
     [editor dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)emailPhoto {
+    
+    if([MFMailComposeViewController canSendMail]){
+        
+       MFMailComposeViewController *email = [[MFMailComposeViewController alloc] init];
+       [email setSubject:@"Subject"];
+       [self presentViewController:email animated:TRUE completion:nil];
+        
+    } else {
+        
+        UIAlertController *noEmail = [UIAlertController alertControllerWithTitle:@"Email Error!" message:@"Cannot Email From This Device" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+        }];
+        
+        [noEmail addAction:confirm];
+        [self presentViewController:noEmail animated:YES completion:nil];
+        
+    }
+
 }
 
 - (void)didReceiveMemoryWarning {
