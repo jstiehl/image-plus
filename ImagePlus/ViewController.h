@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CLImageEditor.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UIImagePickerControllerDelegate,UINavigationControllerDelegate, CLImageEditorDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
+@property UIImage *originalImage;
 
 @end
 
