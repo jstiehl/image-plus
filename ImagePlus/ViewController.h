@@ -14,6 +14,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 @property UIImage *originalImage;
+@property NSData *imageData;
+
+
+
 
 @end
 

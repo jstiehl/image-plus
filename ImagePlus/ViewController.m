@@ -9,7 +9,7 @@
 #import "ViewController.h"
 @import MessageUI;
 
-@interface ViewController ()
+@interface ViewController () <MFMailComposeViewControllerDelegate>
 
 @end
 
@@ -164,15 +164,18 @@
 {
     self.backgroundImage.image = image;
     self.actionButton.enabled = TRUE;
+    [self saveImage:image];
     [editor dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)emailPhoto {
     
     if([MFMailComposeViewController canSendMail]){
-        
        MFMailComposeViewController *email = [[MFMailComposeViewController alloc] init];
+       email.mailComposeDelegate = self;
        [email setSubject:@"Subject"];
+       [email addAttachmentData:self.imageData mimeType:@"image/jpeg" fileName:@"chosen.jpg"];
+       [email setMessageBody:@"Hello" isHTML:FALSE];
        [self presentViewController:email animated:TRUE completion:nil];
         
     } else {
@@ -190,6 +193,27 @@
 
 }
 
+- (void)saveImage: (UIImage *)image
+{
+    if (image != nil)
+    {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                             NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString* path = [documentsDirectory stringByAppendingPathComponent:@"chosen.png"];
+        NSData* data = UIImageJPEGRepresentation(self.backgroundImage.image,1.0);
+        self.imageData = data;
+        [data writeToFile:path atomically:YES];
+    }
+}
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    
+    NSLog(@"%@", error);
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
