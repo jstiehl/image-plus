@@ -173,9 +173,9 @@
     if([MFMailComposeViewController canSendMail]){
        MFMailComposeViewController *email = [[MFMailComposeViewController alloc] init];
        email.mailComposeDelegate = self;
-       [email setSubject:@"Subject"];
+       [email setSubject:@"Image from Image Plus"];
        [email addAttachmentData:self.imageData mimeType:@"image/jpeg" fileName:@"chosen.jpg"];
-       [email setMessageBody:@"Hello" isHTML:FALSE];
+       [email setMessageBody:@"Checkout this awesome photographic image!" isHTML:FALSE];
        [self presentViewController:email animated:TRUE completion:nil];
         
     } else {
@@ -211,12 +211,24 @@
     
     NSLog(@"%@", error);
     [self dismissViewControllerAnimated:YES completion:nil];
-    
+    self.backgroundImage.image = nil;
+    self.actionButton.enabled = FALSE;
     
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)successAlert{
+    //ad an alert saying that image was sent
+    //THIS IS NOT WORKING
+    NSString *message = [NSString stringWithFormat:@"Your image was succesfully emailed!"];
+    UIAlertController *emailSent = [UIAlertController alertControllerWithTitle:@"Success!" message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    
+    [emailSent addAction:ok];
 }
 
 @end
